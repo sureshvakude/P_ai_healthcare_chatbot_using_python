@@ -1,54 +1,53 @@
-# React + TypeScript + Vite
+# Tailwind CSS Playground
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple starter project for playing around with Tailwind in a proper PostCSS environment.
 
-Currently, two official plugins are available:
+To get started:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Clone the repository:
 
-## Expanding the ESLint configuration
+    ```bash
+    git clone https://github.com/tailwindcss/playground.git tailwindcss-playground
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+    cd tailwindcss-playground
+    ```
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+2. Install the dependencies:
+
+    ```bash
+    # Using npm
+    npm install
+
+    # Using Yarn
+    yarn
+    ```
+
+3. Start the development server:
+
+    ```bash
+    # Using npm
+    npm run serve
+
+    # Using Yarn
+    yarn run serve
+    ```
+
+    Now you should be able to see the project running at localhost:8080.
+
+4. Open `public/index.html` in your editor and start experimenting!
+
+## Building for production
+
+Even though this isn't necessarily a starter kit for a proper project, we've included an example of setting up both [Purgecss](https://www.purgecss.com/) and [cssnano](https://cssnano.co/) to optimize your CSS for production.
+
+To build an optimized version of your CSS, simply run:
+
+```bash
+# Using npm
+npm run production
+
+# Using Yarn
+yarn run production
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+After that's done, check out `./public/build/tailwind.css` to see the optimized output.
