@@ -1,0 +1,5 @@
+tensorflow==2.10.0
+tflearn
+numpy<2
+nltk
+pillow==9.5.0
