@@ -4,9 +4,14 @@ import tensorflow
 import random
 import json
 import nltk
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+
 nltk.download('punkt_tab')
 from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
+app = Flask(__name__)
+CORS(app)
 
 with open('intents.json') as file:
     data=json.load(file)
@@ -101,3 +106,17 @@ def chat(msg):
                     return random.choice(responses)
         else:
             return "I didnt get that, try again"
+
+@app.route('/chat', methods=['POST'])
+def chat_endpoint():
+    data = request.get_json()
+    msg = data.get("message", "")
+
+    if not msg:
+        return jsonify({"response": "Please provide a message"}), 400
+
+    response = chat(msg)
+    return jsonify({"response": response})
+
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -3,3 +3,5 @@ tflearn
 numpy<2
 nltk
 pillow==9.5.0
+flask
+flask-cors
