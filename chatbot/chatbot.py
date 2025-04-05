@@ -6,6 +6,9 @@ import json
 import nltk
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 nltk.download('punkt_tab')
 from nltk.stem.lancaster import LancasterStemmer
@@ -117,6 +120,58 @@ def chat_endpoint():
 
     response = chat(msg)
     return jsonify({"response": response})
+
+# Email credentials
+EMAIL_USER = "vvitproject1234@gmail.com"
+EMAIL_PASS = "culr gzbv tstb nyrv"
+
+def send_email(to, subject, message):
+    try:
+        # Set up the MIME
+        msg = MIMEMultipart()
+        msg['From'] = EMAIL_USER
+        msg['To'] = to
+        msg['Subject'] = subject
+
+        # Attach the message to the email body
+        msg.attach(MIMEText(message, 'plain'))
+
+        # Set up the SMTP server
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()  # Secure the connection
+
+        # Log in to the server
+        server.login(EMAIL_USER, EMAIL_PASS)
+
+        # Send the email
+        text = msg.as_string()
+        server.sendmail(EMAIL_USER, to, text)
+
+        server.quit()
+
+        return True, "Email sent successfully!"
+
+    except Exception as e:
+        return False, str(e)
+    
+@app.route('/send_email', methods=['POST'])
+def send_email_api():
+    # Get the data from the request
+    data = request.get_json()
+
+    to = data.get('to')
+    subject = data.get('subject')
+    message = data.get('message')
+
+    if not to or not subject or not message:
+        return jsonify({"success": False, "message": "Missing required fields!"}), 400
+
+    success, msg = send_email(to, subject, message)
+
+    if success:
+        return jsonify({"success": True, "message": msg}), 200
+    else:
+        return jsonify({"success": False, "message": msg}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

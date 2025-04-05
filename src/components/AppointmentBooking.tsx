@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Calendar, Clock, MapPin, Search, User, Phone, Mail, CheckCircle } from 'lucide-react';
 import useGetDoctors from '../utils/use-get-doctors';
 import setAppointment from '../utils/use-set-apoitment';
+import sendEmail from '../utils/send-mail';
 
 interface TimeSlot {
   id: number;
@@ -111,10 +112,39 @@ export const AppointmentBooking: React.FC = () => {
       time_slot: selectedSlot.id,
     };
 
+    // Format the email message with the appointment details
+    const emailMessage = `
+  Hello,
+
+  Your appointment has been successfully booked with Dr. ${selectedDoctor.name}.
+
+  Appointment Details:
+  - Patient Name: ${patientInfo.name}
+  - Phone: ${patientInfo.phone}
+  - Email: ${patientInfo.email}
+  - Reason for Visit: ${patientInfo.reason}
+  - Doctor: Dr. ${selectedDoctor.name}
+  - Date: ${selectedSlot.date}
+  - Time: ${selectedSlot.time}
+
+  Thank you for booking with us!
+
+  Regards,
+  Healthcare App
+`;
+
     try {
       // Call the API to set the appointment
       const response = await setAppointment(appointmentData);
       console.log("Appointment created successfully:", response);
+
+      // Send the email to the patient with the appointment details
+      const emailData = {
+        to: patientInfo.email,  // Send the email to the patient's email address
+        subject: 'Appointment Confirmation',
+        message: emailMessage,
+      };
+      await sendEmail(emailData);
 
       // Mark the booking as complete
       setBookingComplete(true);
