@@ -8,11 +8,21 @@ interface Message {
   timestamp: Date;
 }
 
+const ALLOWED_TOPICS = [
+  'abrasions', 'cuts', 'stings', 'splinter', 'sprains', 'strains',
+  'fever', 'nasal congestion', 'cough', 'sore throat', 'gastrointestinal problems',
+  'skin problems', 'abdominal pain', 'bruises', 'broken toe', 'choking',
+  'wound', 'diarrhea', 'headache', 'cold', 'rash', 'snake bite',
+  'animal bite', 'drowning', 'cpr', 'fracture'
+];
+
 export const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Hello! I'm your AI health assistant. How can I help you today?",
+      text: "Hello! I'm your AI health assistant. I can provide information about first aid and basic care for:\n\n" +
+        ALLOWED_TOPICS.map(topic => `• ${topic.charAt(0).toUpperCase() + topic.slice(1)}`).join('\n') +
+        "\n\nPlease ask about any of these health concerns.",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -28,6 +38,11 @@ export const ChatInterface: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const isHealthRelatedQuestion = (question: string): boolean => {
+    const lowerQuestion = question.toLowerCase();
+    return ALLOWED_TOPICS.some(topic => lowerQuestion.includes(topic));
+  };
 
   const handleSendMessage = async () => {
     if (inputValue.trim() === '') return;
@@ -45,6 +60,20 @@ export const ChatInterface: React.FC = () => {
 
     setTimeout(async () => {
       try {
+
+        if (!isHealthRelatedQuestion(inputValue)) {
+          setMessages(prev => [...prev, {
+            id: messages.length + 2,
+            text: "I'm sorry, but I can only provide information about first aid and basic care for specific health concerns like:\n\n" +
+              ALLOWED_TOPICS.map(topic => `• ${topic.charAt(0).toUpperCase() + topic.slice(1)}`).join('\n') +
+              "\n\nPlease ask about one of these topics.",
+            sender: 'bot',
+            timestamp: new Date()
+          }]);
+          setIsTyping(false);
+          return;
+        }
+
         const response = await fetch('http://127.0.0.1:5000/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
