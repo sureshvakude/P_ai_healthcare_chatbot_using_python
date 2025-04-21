@@ -74,7 +74,7 @@ export const ChatInterface: React.FC = () => {
           return;
         }
 
-        const response = await fetch('https://ai-healthcare-chatbot-using-python-4.onrender.com/chat', {
+        const response = await fetch('https://ai-healthcare-chatbot-using-python.onrender.com/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: inputValue })
