@@ -93,22 +93,21 @@ def bag_of_words(s, words):
 slist = ["hii","hiii","hi"]
 
 def chat(msg):
-    while True:
-        if msg.lower() == "quit":
-            return "thank you"
-        if msg.lower() in slist:
-            return "Hii..how can i help you sir"
-        results = model.predict([bag_of_words(msg, words)])[0]
-        results_index = numpy.argmax(results)
-        tag = labels[results_index]
+    if msg.lower() == "quit":
+        return "thank you"
+    if msg.lower() in slist:
+        return "Hii..how can i help you sir"
+    results = model.predict([bag_of_words(msg, words)])[0]
+    results_index = numpy.argmax(results)
+    tag = labels[results_index]
 
-        if results[results_index]>0.5:
-            for tg in data["intents"]:
-                if tg['tag'] == tag:
-                    responses = tg['responses']
-                    return random.choice(responses)
-        else:
-            return "I didnt get that, try again"
+    if results[results_index]>0.5:
+        for tg in data["intents"]:
+            if tg['tag'] == tag:
+                responses = tg['responses']
+                return random.choice(responses)
+    else:
+        return "I didnt get that, try again"
 
 @app.route('/chat', methods=['POST'])
 def chat_endpoint():
