@@ -14,7 +14,7 @@ nltk.download('punkt_tab')
 from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["https://ai-healthcare-chatbot-using-python.vercel.app"]}})
+CORS(app, origins=["https://ai-healthcare-chatbot-using-python.vercel.app"], supports_credentials=True)
 
 with open('intents.json') as file:
     data=json.load(file)
@@ -173,5 +173,7 @@ def send_email_api():
     else:
         return jsonify({"success": False, "message": msg}), 500
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route("/test", methods=["GET"])
+def test():
+    return jsonify({"msg": "API is live and CORS is working!"})
+
