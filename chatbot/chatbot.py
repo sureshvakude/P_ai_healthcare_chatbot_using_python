@@ -14,7 +14,7 @@ nltk.download('punkt_tab')
 from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": ["https://ai-healthcare-chatbot-using-python.vercel.app"]}})
 
 with open('intents.json') as file:
     data=json.load(file)
