@@ -13,7 +13,7 @@ interface SendEmailRequest {
   
   const sendEmail = async (data: SendEmailRequest): Promise<SendEmailResponse> => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/send_email', {
+      const response = await fetch('https://ai-healthcare-chatbot-using-python.onrender.com/send_email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
