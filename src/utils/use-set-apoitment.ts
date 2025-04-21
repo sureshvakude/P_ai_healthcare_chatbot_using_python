@@ -9,7 +9,7 @@ interface AppointmentData {
   time_slot: number | null;
 }
 
-const API_URL = "http://127.0.0.1:8000/api/appointments/";
+const API_URL = "https://actysuresh.pythonanywhere.com/api/appointments/";
 
 const setAppointment = async (appointmentData: AppointmentData) => {
   try {
