@@ -11,7 +11,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-nltk.download('punkt')
+nltk.download('punkt_tab')
 from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
 
