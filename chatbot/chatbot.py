@@ -15,13 +15,7 @@ from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
 app = Flask(__name__)
 # Update your CORS configuration like this:
-CORS(app, resources={
-    r"/*": {
-        "origins": "ai-healthcare-chatbot-using-python.vercel.app",
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type"]
-    }
-})
+CORS(app, origins="https://ai-healthcare-chatbot-using-python.vercel.app", supports_credentials=True)
 
 with open('intents.json') as file:
     data=json.load(file)
@@ -116,10 +110,8 @@ def chat(msg):
     else:
         return "I didnt get that, try again"
 
-@app.route('/chat', methods=['POST', 'OPTIONS'])
+@app.route('/chat', methods=['POST'])
 def chat_endpoint():
-    if request.method == 'OPTIONS':
-        return jsonify({"status": "ok"}), 200
     data = request.get_json()
     msg = data.get("message", "")
 
