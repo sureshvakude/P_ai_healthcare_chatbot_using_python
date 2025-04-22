@@ -72,11 +72,12 @@ net = tflearn.regression(net)
 
 model = tflearn.DNN(net)
 
-import os
-if os.path.exists("model.tflearn"):
+try:
     model.load("model.tflearn")
-else:
-    raise Exception("Model not found! Make sure to train it locally before deployment.")
+except:
+    model = tflearn.DNN(net)
+    model.fit(training, output, n_epoch=1000, batch_size=8, show_metric=True)
+    model.save("model.tflearn")
 
 def bag_of_words(s, words):
     bag = [0 for _ in range(len(words))]
@@ -109,8 +110,10 @@ def chat(msg):
     else:
         return "I didnt get that, try again"
 
-@app.route('/chat', methods=['POST'])
+@app.route('/chat', methods=['POST', 'OPTIONS'])
 def chat_endpoint():
+    if request.method == 'OPTIONS':
+        return jsonify({"status": "ok"}), 200
     data = request.get_json()
     msg = data.get("message", "")
 
@@ -179,4 +182,4 @@ def test():
     return jsonify({"msg": "API is live and CORS is working!"})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
