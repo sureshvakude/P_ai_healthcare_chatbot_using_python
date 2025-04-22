@@ -164,7 +164,7 @@ def send_email(to, subject, message):
     
 @app.route('/send_email', methods=['POST', 'OPTIONS'])
 def send_email_api():
-     if request.method == 'OPTIONS':
+    if request.method == 'OPTIONS':
         return jsonify({"status": "ok"}), 200
     # Get the data from the request
     data = request.get_json()
