@@ -17,7 +17,7 @@ app = Flask(__name__)
 # Update your CORS configuration like this:
 CORS(app, resources={
     r"/*": {
-        "origins": "https://ai-healthcare-chatbot-using-python.vercel.app",
+        "origins": "ai-healthcare-chatbot-using-python.vercel.app",
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }
