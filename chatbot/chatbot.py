@@ -14,7 +14,14 @@ nltk.download('punkt_tab')
 from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
 app = Flask(__name__)
-CORS(app, origins=["https://ai-healthcare-chatbot-using-python.vercel.app/"], supports_credentials=True, methods=["GET", "POST", "OPTIONS"])
+# Update your CORS configuration like this:
+CORS(app, 
+     resources={
+         r"/chat": {"origins": ["https://ai-healthcare-chatbot-using-python.vercel.app"]},
+         r"/send_email": {"origins": ["https://ai-healthcare-chatbot-using-python.vercel.app"]},
+         r"/test": {"origins": ["https://ai-healthcare-chatbot-using-python.vercel.app"]}
+     },
+     supports_credentials=True)
 
 with open('intents.json') as file:
     data=json.load(file)
@@ -109,8 +116,22 @@ def chat(msg):
     else:
         return "I didnt get that, try again"
 
-@app.route('/chat', methods=['POST'])
+@app.after_request
+def after_request(response):
+    # Add additional CORS headers if needed
+    response.headers.add('Access-Control-Allow-Origin', 'https://ai-healthcare-chatbot-using-python.vercel.app')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+
+@app.route('/chat', methods=['POST', 'OPTIONS'])
 def chat_endpoint():
+    if request.method == 'OPTIONS':
+        response = jsonify({"status": "ok"})
+        response.headers.add("Access-Control-Allow-Origin", "https://ai-healthcare-chatbot-using-python.vercel.app")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+        response.headers.add("Access-Control-Allow-Methods", "POST")
+        return response
     data = request.get_json()
     msg = data.get("message", "")
 
@@ -176,3 +197,5 @@ def send_email_api():
 def test():
     return jsonify({"msg": "API is live and CORS is working!"})
 
+if __name__ == '__main__':
+    app.run(debug=True)
